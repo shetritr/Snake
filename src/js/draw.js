@@ -60,6 +60,7 @@ var drawModule = (function () {
         } else if(direction == 'down') { 
           snakeY++; }
 
+          // moveMonsters();
   
         if (snakeX == -1 || snakeX == w/snakeSize || snakeY == -1 || snakeY == h/snakeSize || checkCollision(snakeX, snakeY, snake)) {
             //restart game
@@ -67,6 +68,8 @@ var drawModule = (function () {
   
             ctx.clearRect(0,0,w,h);
             gameloop = clearInterval(gameloop);
+            Monstersloop = clearInterval(Monstersloop);
+
             return;          
           }
           
@@ -87,9 +90,8 @@ var drawModule = (function () {
             bodySnake(snake[i].x, snake[i].y);
           }
           // moveMonsters();
-          for (let i = 0; i < monsters.length; i++) {
-            bodyMonsters(monsters[i].x,monsters[i].y);
-          } 
+          bodyMonsters(monsters[0].x,monsters[0].y);
+
           
           pizza(food.x, food.y); 
           scoreText();
@@ -113,18 +115,29 @@ var drawModule = (function () {
     }
       
     var moveMonsters = function() {
-        let snakex = snakeX;
-        let snakey = snakeY;
-        if(monsters.x < snakex){
-          monsters.x = monsters.x + 1;
-        }else if(monsters.x > snakex){
-          monsters.x = monsters.x - 1;
-        }else if(monsters.y < snakey){
-          monsters.y = monsters.y + 1;
-        }else if(monsters.y > snakey){
-          monsters.y = monsters.y - 1;
+        var snakeX = snake[snake.length-1].x;
+        var snakeY = snake[snake.length-1].y;
+        if(Math.random()>0.5){
+          if(monsters[0].x < snakeX){
+            monsters[0].x = monsters[0].x + 1;
+          }else if(monsters[0].x > snakeX){
+            monsters[0].x = monsters[0].x - 1;
+          }else if(monsters[0].y < snakeY){
+            monsters[0].y = monsters[0].y + 1;
+          }else if(monsters[0].y > snakeY) {
+              monsters[0].y = monsters[0].y - 1;
+          }
+        }else{
+          if(monsters[0].y < snakeY){
+              monsters[0].y = monsters[0].y + 1;
+          }else if(monsters[0].y > snakeY) {
+              monsters[0].y = monsters[0].y - 1;
+          }else if(monsters[0].x < snakeX){
+            monsters[0].x = monsters[0].x + 1;
+          }else if(monsters[0].x > snakeX){
+            monsters[0].x = monsters[0].x - 1;
+          }
         }
-
       
         // for (var i=0; i<monsters.length; i++) {
         //     checkarray = [false, false ,false,false]
@@ -157,7 +170,7 @@ var drawModule = (function () {
   
     var checkCollision = function(x, y, array) {
         for(var i = 0; i < array.length; i++) {
-          if(array[i].x === x && array[i].y === y)
+          if(array[i].x === x && array[i].y === y || array[i].x === monsters[0].x && array[i].y === monsters[0].y)
           return true;
         } 
         return false;
@@ -169,6 +182,8 @@ var drawModule = (function () {
         drawMonsters();
         createFood();
         gameloop = setInterval(paint, 80);
+        Monstersloop = setInterval(moveMonsters, 100);
+
     }
     
     var bodyMonsters = function(x,y){
