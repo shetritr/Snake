@@ -65,7 +65,7 @@ var drawModule = (function () {
         if (snakeX == -1 || snakeX == w/snakeSize || snakeY == -1 || snakeY == h/snakeSize || checkCollision(snakeX, snakeY, snake)) {
             //restart game
             btn.removeAttribute('disabled', true);
-  
+            deathsound.play();
             ctx.clearRect(0,0,w,h);
             gameloop = clearInterval(gameloop);
             Monstersloop = clearInterval(Monstersloop);
@@ -75,6 +75,7 @@ var drawModule = (function () {
           
           if(snakeX == food.x && snakeY == food.y) {
             var tail = {x: snakeX, y: snakeY}; //Create a new head instead of moving the tail
+            eatsound.play();
             score ++;
             
             createFood(); //Create new food
@@ -178,6 +179,7 @@ var drawModule = (function () {
   
     var init = function(){
         direction = 'down';
+        beginsound.play();
         drawSnake();
         drawMonsters();
         createFood();
